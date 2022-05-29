@@ -1,0 +1,3 @@
+# Put requeriments just for prod env
+
+-r requirements.txt

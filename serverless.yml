@@ -1,0 +1,70 @@
+service: aws-python-game-test
+frameworkVersion: '3'
+provider:
+  name: aws
+  runtime: python3.9
+  stage: ${opt:stage}
+  region: ${opt:region}
+  timeout: 29
+  environment:
+    GAME_STAGE: ${self:provider.stage}
+    GAME_REGION: ${self:provider.region}
+    USERS_TABLE_NAME: ${self:resources.Resources.users.Properties.TableName}
+  iamRoleStatements:
+    - Effect: "Allow"
+      Action:
+        - dynamodb:Query
+        - dynamodb:Scan
+        - dynamodb:GetItem
+        - dynamodb:PutItem
+        - dynamodb:UpdateItem
+        - dynamodb:DeleteItem
+      Resource: "arn:aws:dynamodb:${self:provider.region}:*:table/*"
+
+functions:
+  hello:
+    handler: services/handlers/webhook_raw_user_data_handler.lambda_handler
+    layers:
+      - Ref: PythonRequirementsLambdaLayer
+    events:
+      - http:
+          method: post
+          path: users
+
+resources:
+  Resources:
+    users:
+      Type: 'AWS::DynamoDB::Table'
+      Properties:
+        TableName: ${self:provider.stage}-${self:service}-users
+        AttributeDefinitions:
+          - AttributeName: user_id
+            AttributeType: S
+        KeySchema:
+          - AttributeName: user_id
+            KeyType: HASH
+        ProvisionedThroughput:
+          ReadCapacityUnits: 5
+          WriteCapacityUnits: 5
+
+custom:
+  version: v1
+  pythonRequirements:
+    fileName: requirements/prod_requirements.txt
+    noDeploy:
+      - venv/**
+    layer:
+      name: ${self:provider.stage}-python-game-test
+      description: Python requirements lambda layer
+      compatibleRuntimes:
+        - python3.9
+      licenseInfo: GPLv3
+      allowedAccounts:
+        - "*"
+
+package:
+  exclude:
+    - ".*/**"
+
+plugins:
+  - serverless-python-requirements

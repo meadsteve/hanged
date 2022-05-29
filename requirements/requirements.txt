@@ -1,0 +1,6 @@
+aws-lambda-powertools==1.25.9
+boto3==1.21.44
+botocore==1.24.44
+elasticsearch==8.1.2
+lagom==1.7.0
+reactivex==4.0.0
