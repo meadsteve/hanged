@@ -9,3 +9,7 @@ class IUserAdapter(metaclass=ABCMeta):
     @abstractmethod
     def save(self, user: User) -> bool:
         raise NotImplementedError()
+
+    @abstractmethod
+    def list(self) -> list:
+        raise NotImplementedError()

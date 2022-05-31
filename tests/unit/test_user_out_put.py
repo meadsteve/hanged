@@ -20,3 +20,24 @@ def test_user_output_port(make_new_user, dynamodb_schema, monkeypatch):
     user = make_new_user()
     result = user_output_port.save(user)
     assert result
+
+
+@mock_dynamodb
+def test_user_list_output_port(make_new_user, dynamodb_schema, monkeypatch):
+    devenv = dotenv_values(".env.dev")
+    monkeypatch.setattr(dynamo_user_adapter, "table_name", devenv["USERS_TABLE_NAME"])
+    dynamodb = boto3.resource("dynamodb")
+    dynamodb.create_table(
+        TableName=devenv["USERS_TABLE_NAME"],
+        **dynamodb_schema,
+    )
+    user_output_port = UserOutputPort(DynamoDBUserAdapter())
+    user1 = make_new_user()
+    user2 = make_new_user()
+
+    user_output_port.save(user1)
+    user_output_port.save(user2)
+
+    user_list = user_output_port.list()
+
+    assert len(user_list) == 2

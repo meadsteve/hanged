@@ -22,14 +22,23 @@ provider:
       Resource: "arn:aws:dynamodb:${self:provider.region}:*:table/*"
 
 functions:
-  hello:
-    handler: services/handlers/webhook_raw_user_data_handler.lambda_handler
+  create_user:
+    handler: services/handlers/webhook_raw_user_data_handler.create_lambda_handler
     layers:
       - Ref: PythonRequirementsLambdaLayer
     events:
       - http:
           method: post
           path: users
+
+  user_list:
+    handler: services/handlers/webhook_raw_user_data_handler.list_lambda_handler
+    layers:
+      - Ref: PythonRequirementsLambdaLayer
+    events:
+      - http:
+          method: get
+          path: users/list
 
 resources:
   Resources:

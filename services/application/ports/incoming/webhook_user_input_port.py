@@ -27,12 +27,8 @@ class ApiGatewayUserInputPort(IUserInputPort):
             ops.map(lambda save_response: self.generate_status(save_response)),
         )
 
-    @staticmethod
-    def get_user(event_payload: dict) -> User:
-        pass
-
-    def update_user(self, event, contex) -> Observable[Status]:
-        pass
+    def user_list(self, event, contex) -> list:
+        return self.__user_output_port.list()
 
     @staticmethod
     def get_body_data(event_payload: dict) -> dict:

@@ -14,18 +14,13 @@ class IUserInputPort(metaclass=ABCMeta):
     def create_user(self, event, contex) -> Observable[Status]:
         raise NotImplementedError()
 
-    @staticmethod
     @abstractmethod
-    def get_user(event_payload: dict) -> User:
+    def user_list(self, event, contex) -> list:
         raise NotImplementedError()
 
     @staticmethod
     @abstractmethod
     def get_body_data(event_payload: dict) -> dict:
-        raise NotImplementedError()
-
-    @abstractmethod
-    def update_user(self, event, contex) -> Observable[Status]:
         raise NotImplementedError()
 
     @staticmethod

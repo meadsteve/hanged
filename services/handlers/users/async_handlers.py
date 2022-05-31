@@ -11,3 +11,10 @@ async def user_webhook_async_handler(
     event, context, user_input_port: IUserInputPort
 ):
     return await user_input_port.create_user(event, context)
+
+
+@magic_bind_to_container(container)
+async def user_list_webhook_async_handler(
+    event, context, user_input_port: IUserInputPort
+):
+    return await user_input_port.user_list(event, context)

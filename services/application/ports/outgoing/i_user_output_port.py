@@ -9,3 +9,7 @@ class IUserOutputPort(metaclass=ABCMeta):
     @abstractmethod
     def save(self, order: User) -> bool:
         raise NotImplementedError()
+
+    @abstractmethod
+    def list(self) -> list:
+        raise NotImplementedError()

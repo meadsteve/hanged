@@ -14,6 +14,7 @@ PK_PREFIX = "user#"
 
 
 class DynamoDBUserAdapter(IUserAdapter):
+
     def __init__(self):
         dynamodb = boto3.resource("dynamodb")
         self.__table = dynamodb.Table(table_name)
@@ -37,3 +38,11 @@ class DynamoDBUserAdapter(IUserAdapter):
         except ClientError as error:
             print(error)
             return False
+
+    def list(self) -> list:
+        try:
+            result = self.__table.scan()
+            return result['Items']
+        except ClientError as error:
+            print(error)
+            return None

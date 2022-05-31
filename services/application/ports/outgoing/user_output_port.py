@@ -5,8 +5,12 @@ from services.application.ports.outgoing.i_user_output_port import IUserOutputPo
 
 
 class UserOutputPort(IUserOutputPort):
+
     def __init__(self, adapter: IUserAdapter):
         self.__adapter = adapter
 
     def save(self, user: User) -> bool:
         return self.__adapter.save(user)
+
+    def list(self) -> list:
+        return self.__adapter.list()
